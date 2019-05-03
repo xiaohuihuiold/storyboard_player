@@ -75,16 +75,7 @@ int main() {
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) (3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
-    // 初始化矩阵
-    glm::mat4 model = glm::mat4(1.0f);
-    glm::mat4 view = glm::mat4(1.0f);
-    glm::mat4 projection = glm::mat4(1.0f);
-
-    // 缩放倍数=图片实际大小
-    model = glm::scale(model, glm::vec3(500.0f, 500.0f, 1.0f));
-    // 正射投影,没必要用透视投影
-    projection = glm::ortho(0.0f, (float) WINDOW_WIDTH, 0.0f, (float) WINDOW_HEIGHT, 0.0f, 100.0f);
-
+    float i=0;
     while (!glfwWindowShouldClose(window)) {
 
         key_input(window);
@@ -93,9 +84,7 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         test.use();
-        test.setModel(model);
-        test.setView(view);
-        test.setProjection(projection);
+        test.scale(i+=0.1f, 500.0f);
 
         glBindVertexArray(spriteVAO);
         glBindTexture(GL_TEXTURE_2D, testImg);

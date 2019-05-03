@@ -13,16 +13,24 @@ public:
 
     ~SpriteShader();
 
+    void scale(const GLfloat &w, const GLfloat &h);
+
+private:
     void setModel(const glm::mat4 &mat4);
 
     void setView(const glm::mat4 &mat4);
 
     void setProjection(const glm::mat4 &mat4);
 
+public:
+    int width;
+    int height;
 private:
     GLint modelLocation;
     GLint viewLocation;
     GLint projectionLocation;
+    glm::mat4 view = glm::mat4(1.0f);
+    glm::mat4 projection = glm::mat4(1.0f);
 };
 
 
