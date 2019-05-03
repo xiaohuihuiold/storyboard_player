@@ -10,7 +10,7 @@ include_directories(${PROJECT_INCLUDE})
 add_library(glad SHARED ./src/glad/glad.c)
 add_library(stb_image SHARED ./src/stb_image/stb_image.cpp)
 
-add_executable(storyboard_player src/main.cpp src/shader/Shader.cpp src/shader/Shader.h)
+add_executable(storyboard_player src/main.cpp src/shader/Shader.cpp src/shader/Shader.h src/shader/SpriteShader.cpp src/shader/SpriteShader.h)
 
 target_link_libraries(storyboard_player glad)
 target_link_libraries(storyboard_player stb_image)
