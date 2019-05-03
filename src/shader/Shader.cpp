@@ -48,11 +48,11 @@ Shader::Shader(const char *vertexPath, const char *fragmentPath) {
     glCompileShader(fragmentShader);
     checkCompileError(fragmentShader);
 
-    this->id = glCreateProgram();
-    glAttachShader(this->id, vertexShader);
-    glAttachShader(this->id, fragmentShader);
-    glLinkProgram(this->id);
-    checkLinkError(this->id);
+    id = glCreateProgram();
+    glAttachShader(id, vertexShader);
+    glAttachShader(id, fragmentShader);
+    glLinkProgram(id);
+    checkLinkError(id);
 
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
@@ -63,7 +63,7 @@ Shader::~Shader() {
 }
 
 void Shader::use() {
-    glUseProgram(this->id);
+    glUseProgram(id);
 }
 
 void Shader::checkCompileError(GLuint shader) {

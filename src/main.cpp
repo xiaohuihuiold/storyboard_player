@@ -13,12 +13,12 @@ int WINDOW_WIDTH = 1200;
 int WINDOW_HEIGHT = 720;
 
 GLfloat vertices[] = {
-        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
-        0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-        0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
-        0.5f, 0.5f, 0.0f, 1.0f, 1.0f,
-        -0.5f, 0.5f, 0.0f, 0.0f, 1.0f,
-        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+        0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+        1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
+        1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+        1.0f, 1.0f, 0.0f, 1.0f, 1.0f,
+        0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
+        0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
 };
 
 void key_input(GLFWwindow *);
@@ -32,6 +32,7 @@ int main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
     glfwWindowHint(GLFW_SAMPLES, 4);
 
     GLFWwindow *window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, WINDOW_TITLE, nullptr, nullptr);
@@ -74,6 +75,16 @@ int main() {
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) (3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
+    // 初始化矩阵
+    glm::mat4 model = glm::mat4(1.0f);
+    glm::mat4 view = glm::mat4(1.0f);
+    glm::mat4 projection = glm::mat4(1.0f);
+
+    // 缩放倍数=图片实际大小
+    model = glm::scale(model, glm::vec3(500.0f, 500.0f, 1.0f));
+    // 正射投影,没必要用透视投影
+    projection = glm::ortho(0.0f, (float) WINDOW_WIDTH, 0.0f, (float) WINDOW_HEIGHT, 0.0f, 100.0f);
+
     while (!glfwWindowShouldClose(window)) {
 
         key_input(window);
@@ -82,6 +93,9 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         test.use();
+        test.setModel(model);
+        test.setView(view);
+        test.setProjection(projection);
 
         glBindVertexArray(spriteVAO);
         glBindTexture(GL_TEXTURE_2D, testImg);
@@ -117,6 +131,7 @@ GLuint loadTexture(const char *path) {
 
     // 加载并生成纹理
     int width, height, nrChannels;
+    stbi_set_flip_vertically_on_load(true);
     unsigned char *data = stbi_load(path, &width, &height, &nrChannels, 0);
     if (data) {
         GLenum format = 3;
