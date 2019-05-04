@@ -13,16 +13,32 @@
 #include <glm/gtc/type_ptr.hpp>
 #include "../shader/SpriteShader.h"
 
+enum Origin {
+    TOP_LEFT,
+    TOP_CENTER,
+    TOP_RIGHT,
+    CENTER_LEFT,
+    CENTER,
+    CENTER_RIGHT,
+    BOTTOM_LEFT,
+    BOTTOM_CENTER,
+    BOTTOM_RIGHT
+};
+
 class Sprite {
 public:
 
-    void setScale(const GLfloat &w, const GLfloat &h);
+    void setScaleW(const GLfloat &w);
+
+    void setScaleH(const GLfloat &h);
 
     void setAlpha(const GLfloat &alpha);
 
     void setAngle(const GLfloat &angle);
 
-    void setXY(const GLfloat &x, const GLfloat &y);
+    void setX(const GLfloat &x);
+
+    void setY(const GLfloat &y);
 
     void setColor(const glm::vec3 &color);
 
@@ -31,6 +47,7 @@ public:
 public:
     int width = 0;
     int height = 0;
+    Origin origin = CENTER;
     GLuint texture = 0;
 private:
     // 声明图片属性

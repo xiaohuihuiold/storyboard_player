@@ -109,8 +109,10 @@ int main() {
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 10; j++) {
                 Sprite *sprite = sprites[i * j];
-                sprite->setScale(0.5f, 0.5f);
-                sprite->setXY(i*40.0f, j*40.0f);
+                sprite->setScaleW(0.5f);
+                sprite->setScaleH(0.5f);
+                sprite->setX(i * 40.0f);
+                sprite->setY(j * 40.0f);
                 sprite->setColor(glm::vec3(float(i * j) / 100.0f, float(i) / 10.0f, float(j) / 10.0f));
                 sprite->draw(spriteShader);
             }

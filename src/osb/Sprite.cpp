@@ -4,8 +4,11 @@
 
 #include "Sprite.h"
 
-void Sprite::setScale(const GLfloat &w, const GLfloat &h) {
+void Sprite::setScaleW(const GLfloat &w) {
     this->scaleW = w;
+}
+
+void Sprite::setScaleH(const GLfloat &h) {
     this->scaleH = h;
 }
 
@@ -17,8 +20,11 @@ void Sprite::setAngle(const GLfloat &angle) {
     this->angle = angle;
 }
 
-void Sprite::setXY(const GLfloat &x, const GLfloat &y) {
+void Sprite::setX(const GLfloat &x) {
     this->x = x;
+}
+
+void Sprite::setY(const GLfloat &y) {
     this->y = y;
 }
 
