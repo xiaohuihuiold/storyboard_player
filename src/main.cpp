@@ -71,7 +71,7 @@ int main() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     SpriteShader *spriteShader = new SpriteShader(SPRITE_VERTEX_SHADER, SPRITE_FRAGMENT_SHADER);
-    for (int i = 0; i < 10000; i++) {
+    for (int i = 0; i < 100; i++) {
         Sprite *sprite = loadTexture("../assets/flutter.png");
         sprites.push_back(sprite);
     }
@@ -106,11 +106,11 @@ int main() {
 
         glBindVertexArray(spriteVAO);
 
-        for (int i = 0; i < 100; i++) {
-            for (int j = 0; j < 100; j++) {
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
                 Sprite *sprite = sprites[i * j];
-                sprite->setScale(0.1f, 0.1f);
-                sprite->setXY(i*10.0f, j*10.0f);
+                sprite->setScale(0.5f, 0.5f);
+                sprite->setXY(i*40.0f, j*40.0f);
                 sprite->setColor(glm::vec3(float(i * j) / 100.0f, float(i) / 10.0f, float(j) / 10.0f));
                 sprite->draw(spriteShader);
             }
