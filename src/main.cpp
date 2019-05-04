@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <thread>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "shader/SpriteShader.h"
@@ -10,11 +11,24 @@
 #define SPRITE_VERTEX_SHADER "../assets/shader/sprite_vertex.glsl"
 #define SPRITE_FRAGMENT_SHADER "../assets/shader/sprite_fragment.glsl"
 
+void refresh_fps();
+
+void key_input(GLFWwindow *);
+
+void framebuffer_size_callback(GLFWwindow *, int, int);
+
+SpriteShader *loadTexture(const char *);
+
 int WINDOW_WIDTH = 1708;
 int WINDOW_HEIGHT = 960;
 
 long currentTime = 0;
 std::vector<SpriteShader *> sprites;
+
+volatile int frames = 0;
+volatile int fps = 0;
+volatile bool refresh_is_run = true;
+std::thread fpsThread(refresh_fps);
 
 GLfloat vertices[] = {
         0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
@@ -25,11 +39,6 @@ GLfloat vertices[] = {
         0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
 };
 
-void key_input(GLFWwindow *);
-
-void framebuffer_size_callback(GLFWwindow *, int, int);
-
-SpriteShader *loadTexture(const char *);
 
 int main() {
     glfwInit();
@@ -107,16 +116,27 @@ int main() {
         glDepthMask(true);
         glfwSwapBuffers(window);
         glfwPollEvents();
+        frames++;
     }
 
     for (int i = 0; i < sprites.size(); i++) {
         delete sprites[i];
     }
-
     sprites.clear();
+    refresh_is_run = false;
+    fpsThread.join();
 
     glfwTerminate();
     return 0;
+}
+
+void refresh_fps() {
+    while (refresh_is_run) {
+        fps = frames;
+        frames = 0;
+        std::cout << "fps:" << fps << std::endl;
+        std::this_thread::sleep_for(std::chrono::seconds(1));
+    }
 }
 
 void key_input(GLFWwindow *window) {
