@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "shader/SpriteShader.h"
@@ -13,6 +14,7 @@ int WINDOW_WIDTH = 1708;
 int WINDOW_HEIGHT = 960;
 
 long currentTime = 0;
+std::vector<SpriteShader *> sprites;
 
 GLfloat vertices[] = {
         0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
@@ -52,13 +54,15 @@ int main() {
         glfwTerminate();
         return -1;
     }
+    // 可有可无
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_MULTISAMPLE);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-    SpriteShader *testImg = loadTexture("../assets/flutter.png");
-
+    for (int i = 0; i < 100; i++) {
+        SpriteShader *sprite = loadTexture("../assets/flutter.png");
+        sprites.push_back(sprite);
+    }
     // 储存顶点数据
     GLuint spriteVBO;
     glGenBuffers(1, &spriteVBO);
@@ -84,20 +88,32 @@ int main() {
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        // 去掉深度测试
+        glDepthMask(false);
 
         glBindVertexArray(spriteVAO);
 
-        testImg->use();
-        testImg->setXY(100.0f, 100.0f);
-        testImg->setScale(0.5f, 0.5f);
-        testImg->setColor(glm::vec3(1.0f, 1.0f, 1.0f));
-        testImg->draw();
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                SpriteShader *sprite = sprites[i * j];
+                sprite->use();
+                sprite->setScale(0.5f, 0.5f);
+                sprite->setXY(50.0f * i, 50.0f * j);
+                sprite->setColor(glm::vec3(float(i * j) / 100.0f, float(i) / 10.0f, float(j) / 10.0f));
+                sprite->draw();
+            }
+        }
 
+        glDepthMask(true);
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
-    delete testImg;
+    for (int i = 0; i < sprites.size(); i++) {
+        delete sprites[i];
+    }
+
+    sprites.clear();
 
     glfwTerminate();
     return 0;

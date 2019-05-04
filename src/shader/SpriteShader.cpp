@@ -13,7 +13,6 @@ SpriteShader::SpriteShader(const char *vertexPath, const char *fragmentPath) : S
 }
 
 SpriteShader::~SpriteShader() {
-
 }
 
 void SpriteShader::setScale(const GLfloat &w, const GLfloat &h) {
