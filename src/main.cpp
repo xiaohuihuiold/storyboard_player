@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 #include "shader/SpriteShader.h"
 #include "stb_image/stb_image.h"
+#include "osb/Sprite.h"
 
 #define WINDOW_TITLE "Storyboard Player"
 
@@ -17,13 +18,13 @@ void key_input(GLFWwindow *);
 
 void framebuffer_size_callback(GLFWwindow *, int, int);
 
-SpriteShader *loadTexture(const char *);
+Sprite *loadTexture(const char *);
 
 int WINDOW_WIDTH = 1708;
 int WINDOW_HEIGHT = 960;
 
 long currentTime = 0;
-std::vector<SpriteShader *> sprites;
+std::vector<Sprite *> sprites;
 
 volatile int frames = 0;
 volatile int fps = 0;
@@ -68,10 +69,13 @@ int main() {
     glEnable(GL_MULTISAMPLE);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    for (int i = 0; i < 100; i++) {
-        SpriteShader *sprite = loadTexture("../assets/flutter.png");
+
+    SpriteShader *spriteShader = new SpriteShader(SPRITE_VERTEX_SHADER, SPRITE_FRAGMENT_SHADER);
+    for (int i = 0; i < 10000; i++) {
+        Sprite *sprite = loadTexture("../assets/flutter.png");
         sprites.push_back(sprite);
     }
+
     // 储存顶点数据
     GLuint spriteVBO;
     glGenBuffers(1, &spriteVBO);
@@ -102,14 +106,13 @@ int main() {
 
         glBindVertexArray(spriteVAO);
 
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
-                SpriteShader *sprite = sprites[i * j];
-                sprite->use();
-                sprite->setScale(0.5f, 0.5f);
-                sprite->setXY(50.0f * i, 50.0f * j);
+        for (int i = 0; i < 100; i++) {
+            for (int j = 0; j < 100; j++) {
+                Sprite *sprite = sprites[i * j];
+                sprite->setScale(0.1f, 0.1f);
+                sprite->setXY(i*10.0f, j*10.0f);
                 sprite->setColor(glm::vec3(float(i * j) / 100.0f, float(i) / 10.0f, float(j) / 10.0f));
-                sprite->draw();
+                sprite->draw(spriteShader);
             }
         }
 
@@ -123,6 +126,8 @@ int main() {
         delete sprites[i];
     }
     sprites.clear();
+    delete spriteShader;
+
     refresh_is_run = false;
     fpsThread.join();
 
@@ -151,7 +156,7 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
     WINDOW_HEIGHT = height;
 }
 
-SpriteShader *loadTexture(const char *path) {
+Sprite *loadTexture(const char *path) {
     GLuint texture;
     // 生成材质
     glGenTextures(1, &texture);
@@ -186,7 +191,7 @@ SpriteShader *loadTexture(const char *path) {
         std::cout << "材质加载失败" << std::endl;
     }
 
-    SpriteShader *sprite = new SpriteShader(SPRITE_VERTEX_SHADER, SPRITE_FRAGMENT_SHADER);
+    Sprite *sprite = new Sprite();
     sprite->width = width;
     sprite->height = height;
     sprite->texture = texture;
