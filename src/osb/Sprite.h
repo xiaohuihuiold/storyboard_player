@@ -28,6 +28,14 @@ enum Origin {
 class Sprite {
 public:
 
+    void setTexture(const GLuint &texture);
+
+    void setWidth(const GLint &width);
+
+    void setHeight(const GLint &height);
+
+    void setOrigin(const Origin &origin);
+
     void setScaleW(const GLfloat &w);
 
     void setScaleH(const GLfloat &h);
@@ -44,13 +52,12 @@ public:
 
     void draw(SpriteShader *shader);
 
-public:
+private:
+    GLuint texture = 0;
+    // 声明图片属性
     int width = 0;
     int height = 0;
     Origin origin = CENTER;
-    GLuint texture = 0;
-private:
-    // 声明图片属性
     GLfloat scaleW = 1.0f;
     GLfloat scaleH = 1.0f;
     GLfloat alpha = 1.0f;

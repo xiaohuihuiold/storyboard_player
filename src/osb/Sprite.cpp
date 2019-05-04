@@ -4,6 +4,23 @@
 
 #include "Sprite.h"
 
+
+void Sprite::setTexture(const GLuint &texture) {
+    this->texture = texture;
+}
+
+void Sprite::setWidth(const GLint &width) {
+    this->width = width;
+}
+
+void Sprite::setHeight(const GLint &height) {
+    this->height = height;
+}
+
+void Sprite::setOrigin(const Origin &origin) {
+    this->origin = origin;
+}
+
 void Sprite::setScaleW(const GLfloat &w) {
     this->scaleW = w;
 }

@@ -194,8 +194,8 @@ Sprite *loadTexture(const char *path) {
     }
 
     Sprite *sprite = new Sprite();
-    sprite->width = width;
-    sprite->height = height;
-    sprite->texture = texture;
+    sprite->setWidth(width);
+    sprite->setHeight(height);
+    sprite->setTexture(texture);
     return sprite;
 }

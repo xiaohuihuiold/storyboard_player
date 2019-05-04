@@ -25,7 +25,7 @@ public:
 
     void setAlpha(const GLfloat &alpha);
 
-public:
+private:
     // 声明着色器变量location
     GLint modelLocation;
     GLint viewLocation;
