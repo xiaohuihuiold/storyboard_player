@@ -9,8 +9,10 @@
 #define SPRITE_VERTEX_SHADER "../assets/shader/sprite_vertex.glsl"
 #define SPRITE_FRAGMENT_SHADER "../assets/shader/sprite_fragment.glsl"
 
-int WINDOW_WIDTH = 1200;
-int WINDOW_HEIGHT = 720;
+int WINDOW_WIDTH = 1708;
+int WINDOW_HEIGHT = 960;
+
+long currentTime = 0;
 
 GLfloat vertices[] = {
         0.0f, 0.0f, 0.0f, 0.0f, 0.0f,
@@ -25,7 +27,7 @@ void key_input(GLFWwindow *);
 
 void framebuffer_size_callback(GLFWwindow *, int, int);
 
-GLuint loadTexture(const char *);
+SpriteShader *loadTexture(const char *);
 
 int main() {
     glfwInit();
@@ -53,9 +55,9 @@ int main() {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_MULTISAMPLE);
     glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    SpriteShader test(SPRITE_VERTEX_SHADER, SPRITE_FRAGMENT_SHADER);
-    GLuint testImg = loadTexture("../assets/flutter.png");
+    SpriteShader *testImg = loadTexture("../assets/flutter.png");
 
     // 储存顶点数据
     GLuint spriteVBO;
@@ -75,25 +77,27 @@ int main() {
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) (3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
-    float i=0;
     while (!glfwWindowShouldClose(window)) {
 
+        currentTime = (long) (glfwGetTime() * 1000.0f);
         key_input(window);
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        test.use();
-        test.scale(i+=0.1f, 500.0f);
-
         glBindVertexArray(spriteVAO);
-        glBindTexture(GL_TEXTURE_2D, testImg);
 
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        testImg->use();
+        testImg->setXY(100.0f, 100.0f);
+        testImg->setScale(0.5f, 0.5f);
+        testImg->setColor(glm::vec3(1.0f, 1.0f, 1.0f));
+        testImg->draw();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
+
+    delete testImg;
 
     glfwTerminate();
     return 0;
@@ -111,7 +115,7 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height) {
     WINDOW_HEIGHT = height;
 }
 
-GLuint loadTexture(const char *path) {
+SpriteShader *loadTexture(const char *path) {
     GLuint texture;
     // 生成材质
     glGenTextures(1, &texture);
@@ -145,5 +149,10 @@ GLuint loadTexture(const char *path) {
     } else {
         std::cout << "材质加载失败" << std::endl;
     }
-    return texture;
+
+    SpriteShader *sprite = new SpriteShader(SPRITE_VERTEX_SHADER, SPRITE_FRAGMENT_SHADER);
+    sprite->width = width;
+    sprite->height = height;
+    sprite->texture = texture;
+    return sprite;
 }

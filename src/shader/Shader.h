@@ -20,7 +20,7 @@ public:
 
     ~Shader();
 
-    void use();
+    virtual void use();
 
     void setMat4(const GLint &location, const glm::mat4 &mat4);
 
